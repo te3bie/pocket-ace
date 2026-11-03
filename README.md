@@ -4,13 +4,13 @@
 
 Pocket Ace helps Canadian students plan university costs, track everyday expenses, build savings goals, and explore educational opportunities—all in one friendly space.
 
-## ✨ Try the demo
+## Try the demo
 
 **[Open Pocket Ace →](https://te3bie.github.io/pocket-ace/)**
 
 Available on your phone or computer. No installation needed.
 
-## 🌱 Getting started
+## Getting started
 
 1. **Take a look around**  
    Open the app and tap **Explore the fictional demo**.
@@ -26,7 +26,7 @@ Available on your phone or computer. No installation needed.
 
 Your demo changes are saved in the browser on your device.
 
-## 🧩 What’s inside
+## What’s inside
 
 | Feature | How it helps |
 | --- | --- |
@@ -37,7 +37,7 @@ Your demo changes are saved in the browser on your device.
 | **Application tracking** | Save opportunities and track your application status. |
 | **PocketPal demo** | Try a scripted guide to student budgeting. |
 
-## 💭 About this demo
+## About this demo
 
 Pocket Ace is a working demo with fictional data.
 
