@@ -1,0 +1,37 @@
+# External services and test procedures
+
+## Official documentation consulted
+
+Version decisions used the official Expo [SDK](https://expo.dev/sdk), [Router installation](https://docs.expo.dev/router/installation/), and [SDK 58 notifications](https://docs.expo.dev/versions/v58.0.0/sdk/notifications/) docs, plus [Supabase React Native Auth](https://supabase.com/docs/guides/auth/quickstarts/react-native). The starter resolved Expo 58.0.23, React 19.3.0, RN 0.88.1 and compatible Expo modules; `npm install` created the committed lockfile. `expo install --check` identified AsyncStorage and it was aligned to 2.2.0. Custom pie/line charts use maintained `react-native-svg`, avoiding an extra chart wrapper.
+
+Banking research used official Plaid [Canadian institution coverage](https://plaid.com/docs/institutions/), [Sandbox institutions](https://plaid.com/docs/sandbox/institutions/), [Hosted Link](https://plaid.com/docs/link/hosted-link/) and [Link API](https://plaid.com/docs/api/link/). Canadian support must be checked per institution/product at launch; sandbox behavior does not prove production availability. No financial facts or current awards were imported from these technical sources.
+
+## PocketPal
+
+Configure an owner-approved OpenAI-compatible chat-completions provider via server-only `AI_API_URL`, `AI_API_KEY`, `AI_MODEL`. No default provider or billable model is selected. The endpoint must be HTTPS. Set `APP_ORIGIN` to your web origin for CORS, and deploy to a staging Supabase project before production.
+
+Authenticated endpoint `pocketpal` validates bearer identity and required MFA assurance. Limits: five requests/minute, forty/day/account; 12 messages, user text ≤1,500 chars, assistant history ≤10,000 chars; 20-second provider timeout and 700-token response cap. The database atomic limiter has no client write policy. Context is off by default; consent is checked in stored settings before including period-specific calculated totals. Raw transaction descriptions, employer, name and bank credentials are excluded. **Typed chat messages are still sent to the selected provider**, so users are told to avoid sensitive information. Provider retention/region and minors processing must be approved before launch.
+
+Only published, non-demo, non-expired reviewed opportunity records ground answers; prompts instruct the provider to cite official URLs. Retrieved text is untrusted and no tools are exposed. A model may still produce a wrong answer; factual grounding must be evaluated with real records. No budget mutations exist in chat; editors provide explicit save actions. No streaming is implemented; a thinking state, errors and retry are present. History is part of the private account-state document and can be deleted in-app. Usage counters store counts, not messages. Set a retention cleanup job for expired usage counters/webhook metadata before production.
+
+Staging tests: unsigned/expired token → rejected; verified user + no key → explicit unavailable message; context off → no financial fields in provider payload; context on → aggregate totals only; simulated provider 429/timeout/malformed response → visible retry; prompt injection in a catalog summary → no tools/actions/secrets; >limits → rejected. Deno type checks passed; authenticated staging/provider tests remain unexecuted without credentials.
+
+## Bank sandbox
+
+Server-only secrets: `PLAID_CLIENT_ID`, `PLAID_SECRET` (Sandbox), `PLAID_WEBHOOK_URL` (deployed bank endpoint), `PLAID_REDIRECT_URI` (registered HTTPS OAuth return), `PLAID_COMPLETION_URI` (e.g. `pocketace://settings` for native or your HTTPS settings page), and `BANK_TOKEN_KEY` (base64 32-byte AES key). Generate the key locally with a cryptographic secret generator and store in Supabase Secrets; never commit it or paste it in the client. Rotating it requires re-encrypting existing tokens or reconnecting all items. No SMS/email Link delivery is enabled.
+
+`BankProvider` is independent of the client and `PlaidSandbox` hardcodes the sandbox hostname. Settings opens the provider-hosted page in the system browser. Hosted Link is used to allow the Expo/web preview to share a provider-hosted flow; a native Plaid SDK can replace the adapter/UI in a production development build. Provider guidance recommends native SDKs for fully native production apps. Public tokens are delivered in signed `SESSION_FINISHED` webhooks, mapped to a server-stored link session, and exchanged server-side. The client never sees access tokens. Encryption uses AES-GCM with a fresh IV; stored tokens have no client read policy.
+
+After returning, tap Check connection then Choose connected accounts, select CAD accounts and save, then sync. Reconnect opens update mode. Disconnect removes the provider item and token. Bank balances are displayed separately from the entered cash balance and never silently added. Historical synced transactions are shown after sync with manual category correction.
+
+Webhook verification requires ES256, provider key retrieval, JWT age ≤5 minutes and exact SHA-256 request-body binding. Webhook event hashes deduplicate completed events; failed syncs can be retried. Transactions upsert on `(user_id, provider transaction ID)`, provider removals mark rows removed, pending IDs are marked removed when replaced by posted entries, and the cursor is saved only after pages succeed. Retries replay safe upserts. Provider sync errors are returned without access tokens. Max 20 pages/request; a large history requires retry. Concurrent synchronization, provider rate limiting and update-mode callbacks need staging stress tests before production. Reconnecting by replacing an item should first disconnect the old item; the app supports one bank item/account owner at a time.
+
+Sandbox acceptance: connect a Canadian institution supported for Transactions (check provider dashboard); select CAD account(s); sync twice and assert IDs/count unchanged; alter category then sync; trigger removed/pending-to-posted fixtures; simulate reconnect-required; send unsigned/tampered/expired webhook and assert rejection; replay signed event and assert no extra rows; disconnect and assert server token removed. These require Sandbox credentials and a reachable signed webhook and have **not been run**. Never enter real banking passwords into Pocket Ace.
+
+Manual alternative: expense/income entry and CSV imports work without a provider. CSV previews and stable IDs prevent duplicates. CSV rows are not silently added to budgets.
+
+## Notifications
+
+Local scheduling uses `expo-notifications`; it does not register push tokens or send notifications via a remote push service. Permission is requested only when enabled. Up to 40 expense occurrences and 15 opportunity reminders are rebuilt for the next 60 days on app changes/open, using stable identifiers. Edits, paid status, deletion or turning reminders off cancel stale requests. 09:00 is converted using the configured IANA timezone, including DST. Invalid partially typed opportunity dates are skipped. Refresh by opening the app; background renewal/push delivery is not implemented.
+
+Test on physical iOS and Android development builds: declined permission, enabled permission, due reminder, no duplicate after edit, mark paid cancellation, timezone change, opportunity reminder, app cold-start notification deep-link. Web preview cannot verify native notification delivery. No native notifications have been verified on devices in this environment.

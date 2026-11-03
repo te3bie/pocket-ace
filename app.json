@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Pocket Ace",
+    "slug": "pocket-ace",
+    "scheme": "pocketace",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ca.pocketace.app"
+    },
+    "android": {
+      "package": "ca.pocketace.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-notifications",
+      "expo-image-picker",
+      "expo-sharing"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

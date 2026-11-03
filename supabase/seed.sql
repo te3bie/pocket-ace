@@ -1,0 +1,4 @@
+-- No fictional opportunity is seeded into production tables.
+-- Demo fixtures live in src/domain/catalog.ts and are visible only in local demo mode.
+-- Assign an admin explicitly after creating a real account:
+-- insert into public.admin_roles(user_id) values ('YOUR_USER_UUID');
