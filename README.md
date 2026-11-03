@@ -4,6 +4,8 @@ A student budgeting and university-planning app built with Expo Router, React Na
 
 The app runs immediately in an explicitly fictional, locally persisted demo. Live services require configuration. **This repository is not a verified production launch.** See [docs/STATUS.md](docs/STATUS.md) for executed checks, external blockers and remaining gaps.
 
+For phone preview and GitHub Pages sharing, see [the phone and GitHub guide](docs/PHONE_AND_GITHUB.md).
+
 ## Start here (no accounts needed)
 
 1. Install Node.js 24 LTS and npm. Open Terminal in this **Pocket Ace** folder. (The implementation was checked using Node 26; CI uses 24.)

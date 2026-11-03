@@ -37,3 +37,11 @@ GitHub may ask you to authenticate through your credential manager. Do not enter
 Suggested repository description: “A Canadian student budgeting and university-planning app built with Expo, React Native, TypeScript and Supabase. Includes a persistent fictional demo, automated tests and documented integration boundaries.”
 
 GitHub stores the source. It does not automatically host a working Expo website. To share a public clickable demo, choose and approve a static hosting provider, connect this repository, build with `npm run build`, publish `dist`, and configure clean URLs (`/profile` → `/profile.html`). No provider has been connected or published. Live accounts/AI/banking are optional later configuration; they are not needed for the fictional portfolio demo.
+
+## Public demo on GitHub Pages
+
+This repository includes `.github/workflows/pages.yml`. It builds a fictional demo with live Supabase configuration excluded, tests the app, uploads `dist`, and deploys using GitHub's official Pages actions. The Expo base path is read from GitHub Pages configuration so the project works at `https://te3bie.github.io/pocket-ace/`. Directory indexes support refreshing individual routes.
+
+One-time setup on GitHub: repository → Settings → Pages → Build and deployment → Source → **GitHub Actions**. Then push the deployment commit or open Actions → **Publish Pocket Ace demo** → **Run workflow**. Wait until both build/deploy jobs are green. Open the URL shown by the deployment job and choose **Explore the fictional demo**. No Mac server needs to remain running for the hosted version. Later pushes to `main` rebuild it automatically.
+
+Local Pages export: `npm run build:pages` (defaults to `/pocket-ace`). Normal `npm run build` keeps the local/native root path unchanged. A successful local export does not mean GitHub has published the site; check the Actions result and public URL.
