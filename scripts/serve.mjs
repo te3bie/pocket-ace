@@ -1,8 +1,11 @@
+import { networkInterfaces } from "node:os";
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 const root = resolve("dist"),
   port = Number(process.env.PORT || 8081);
+const lan = process.argv.includes("--lan");
+const host = lan ? "0.0.0.0" : "127.0.0.1";
 const mime = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
@@ -40,6 +43,15 @@ createServer(async (req, res) => {
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("Page not found.");
   }
-}).listen(port, "127.0.0.1", () =>
-  console.log(`Pocket Ace preview: http://localhost:${port}`),
-);
+}).listen(port, host, () => {
+  console.log(`Pocket Ace preview: http://localhost:${port}`);
+  if (lan) {
+    console.log(
+      "Connect your phone to the same Wi-Fi, then open one of these addresses:",
+    );
+    for (const addresses of Object.values(networkInterfaces()))
+      for (const address of addresses || [])
+        if (address.family === "IPv4" && !address.internal)
+          console.log(`  http://${address.address}:${port}`);
+  }
+});
