@@ -1,12 +1,11 @@
 
+[✦ OPEN NOVA — TRY THE APP →](https://te3bie.github.io/pocket-ace/)
+Available on your phone or computer. No installation needed.
+
 # 🎓 Pocket Ace
 ### Student life, with a little more balance.
 
 Pocket Ace helps Canadian students plan university costs, track everyday expenses, build savings goals, and explore educational opportunities—all in one friendly space.
-
-## Try the demo
-
-**[Open Pocket Ace →](https://te3bie.github.io/pocket-ace/)**
 
 Available on your phone or computer. No installation needed.
 
