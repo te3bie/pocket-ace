@@ -1,5 +1,5 @@
 
-[✦ OPEN NOVA — TRY THE APP →](https://te3bie.github.io/pocket-ace/)
+[✦ OPEN POCKETACE — TRY THE APP →](https://te3bie.github.io/pocket-ace/)
 Available on your phone or computer. No installation needed.
 
 # 🎓 Pocket Ace
